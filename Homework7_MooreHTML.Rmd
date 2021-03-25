@@ -1,0 +1,53 @@
+---
+title: "Homework 6"
+author: "Riyo Moore"
+date: "3/20/2021"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r}
+library(rvest) 
+library(dplyr) 
+library(tidyverse) 
+library(repurrrsive)
+listviewer::jsonedit(gh_users)  
+```
+
+Problem 1
+```{r}
+Link1 <- "https://www.imdb.com/list/ls091520106/"
+page = read_html(Link1)
+Title = page %>% html_nodes(".lister-item-header a")%>%
+  html_text()
+
+
+ratings = page %>% html_nodes(".ipl-rating-star.small .ipl-rating-star__rating") %>% html_text()
+
+Runtime = page %>% html_nodes(".runtime") %>% html_text()
+
+Problem1Dataframe = data.frame(Title,ratings,Runtime)
+as_tibble(Problem1Dataframe)
+```
+
+Problem 2 
+
+a) A nested list is a complicated list. What it is is a list made up of other lists inside of it. 
+
+b)
+The code gh_repos produces an unorganized and not at all structured list. The list is very hard to read and comprehend.  
+
+c)
+```{r}
+repos <- tibble(repo = gh_repos)
+repos
+```
+When we run the above code the nested list repos is turned into a tibble showing the number of lists within repos and their length. 
+
+d) When this chunk of code is run listviewer::jsonedit(gh_repos) , the Viewer in R will open up to show the list data for gh_repos. Here we can look at the items of each nested list in the set. Here we have a nested list configuration because the items in the gh_repos data set are lists themselves. The number 30 for most of the lists represent the number of columns of the list and then 68 represents the length of each column. 
+
+e) 
+```{r}
+repos %>% unnest_longer(repo) %>% unnest_wider(repo)
+```
